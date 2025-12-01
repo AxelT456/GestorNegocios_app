@@ -1,0 +1,7 @@
+{
+  "name": "app_cemas",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
