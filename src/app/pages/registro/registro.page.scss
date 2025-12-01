@@ -1,0 +1,84 @@
+// Color de fondo suave
+.bg-light {
+  --background: #f4f6fa;
+}
+
+.main-container {
+  // QUITAMOS el flex: center para que no se apachurre
+  padding: 30px 20px; // Más margen arriba
+  padding-bottom: 50px; // Espacio abajo para que el scroll no corte el final
+}
+
+// CABECERA
+.header-section {
+  margin-bottom: 25px;
+
+  .back-btn {
+    width: 45px; height: 45px; // Botón un poquito más grande
+    background: white;
+    border-radius: 15px; // Más redondeado
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+    color: #1c2a4e;
+    font-size: 22px;
+  }
+
+  h1 {
+    font-weight: 800; color: #1c2a4e; margin: 0; font-size: 28px;
+    letter-spacing: -0.5px;
+  }
+  p {
+    color: #8a94a6; margin-top: 8px; font-size: 16px;
+  }
+}
+
+// TARJETA FORMULARIO
+.form-card {
+  background: white;
+  border-radius: 30px;
+  padding: 30px 25px; // Más padding interno
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04); // Sombra más suave y difusa
+  margin-bottom: 25px;
+}
+
+.input-group {
+  margin-bottom: 22px; // MÁS ESPACIO ENTRE INPUTS (Antes era 15px)
+
+  ion-label {
+    display: block; margin-bottom: 10px; font-weight: 700;
+    color: #1c2a4e; font-size: 14px; margin-left: 5px;
+  }
+}
+
+.custom-input {
+  --background: #f4f6fa;
+  --border-radius: 18px; // Más redondo
+  --padding-start: 18px;
+  height: 58px; // MÁS ALTO (Antes era 50px) para que respire el texto
+
+  ion-icon { color: #8a94a6; margin-right: 12px; font-size: 20px; }
+  ion-input {
+    --placeholder-color: #aeb4c0;
+    font-weight: 600;
+    color: #1c2a4e;
+    font-size: 15px;
+  }
+}
+
+// BOTONES
+.btn-primary {
+  --border-radius: 18px;
+  --background: #3880ff;
+  --box-shadow: 0 10px 25px rgba(56, 128, 255, 0.3);
+  font-weight: 700; height: 58px; // Botón grande
+  text-transform: none; font-size: 17px;
+  margin-top: 10px;
+}
+
+.footer-link {
+  text-align: center;
+  padding-bottom: 20px;
+  p { color: #8a94a6; font-size: 15px; margin-bottom: 5px; }
+  ion-button { --color: #3880ff; font-weight: 700; text-transform: none; font-size: 16px; }
+}

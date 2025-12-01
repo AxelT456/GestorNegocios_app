@@ -1,0 +1,47 @@
+<ion-content [fullscreen]="true" class="bg-light">
+
+  <div class="main-container">
+
+    <div class="header-section">
+      <div class="logo-circle">
+        <ion-icon name="restaurant"></ion-icon>
+      </div>
+      <h1>Hola de nuevo</h1>
+      <p>Administración CEMAS</p>
+    </div>
+
+    <div class="form-card">
+
+      <form (ngSubmit)="ingresar()">
+
+        <div class="input-group">
+          <ion-label>Usuario</ion-label>
+          <ion-item lines="none" class="custom-input">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-input type="text" placeholder="Ej. admin" [(ngModel)]="credenciales.username" name="username"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-group">
+          <ion-label>Contraseña</ion-label>
+          <ion-item lines="none" class="custom-input">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input type="password" placeholder="••••••" [(ngModel)]="credenciales.password" name="password"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="ion-margin-top action-section">
+          <ion-button expand="block" type="submit" class="btn-primary">
+            Ingresar
+          </ion-button>
+
+          <ion-button fill="clear" color="medium" class="btn-secondary" routerLink="/registro">
+            Crear cuenta nueva
+          </ion-button>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</ion-content>

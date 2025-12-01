@@ -1,0 +1,106 @@
+// Color de fondo suave (Gris azulado muy claro)
+.bg-light {
+  --background: #f4f6fa;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  padding: 20px;
+}
+
+// SECCIÓN DE CABECERA
+.header-section {
+  text-align: center;
+  margin-bottom: 40px;
+
+  .logo-circle {
+    width: 80px;
+    height: 80px;
+    background: #3880ff; // Azul Ionic (o usa el rosa de tu imagen: #ff4d95)
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(56, 128, 255, 0.3);
+
+    ion-icon {
+      font-size: 40px;
+      color: white;
+    }
+  }
+
+  h1 {
+    font-weight: 700;
+    color: #1c2a4e; // Azul oscuro casi negro
+    margin: 0;
+    font-size: 28px;
+  }
+
+  p {
+    color: #8a94a6; // Gris texto
+    margin-top: 5px;
+    font-size: 16px;
+  }
+}
+
+// TARJETA DEL FORMULARIO
+.form-card {
+  background: white;
+  border-radius: 30px; // Bordes muy redondos como la imagen
+  padding: 30px 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05); // Sombra suave "flotante"
+}
+
+.input-group {
+  margin-bottom: 20px;
+
+  ion-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #1c2a4e;
+    font-size: 14px;
+    margin-left: 5px;
+  }
+}
+
+// INPUTS PERSONALIZADOS (Estilo "Caja")
+.custom-input {
+  --background: #f4f6fa; // Mismo gris del fondo o un pelin mas claro
+  --border-radius: 15px;
+  --padding-start: 15px;
+  height: 55px;
+
+  ion-icon {
+    color: #8a94a6;
+    margin-right: 10px;
+  }
+
+  ion-input {
+    --placeholder-color: #aeb4c0;
+    font-weight: 500;
+    color: #1c2a4e;
+  }
+}
+
+// BOTONES
+.btn-primary {
+  --border-radius: 15px;
+  --background: #3880ff; // Azul primario
+  --box-shadow: 0 10px 20px rgba(56, 128, 255, 0.25);
+  font-weight: 700;
+  height: 55px;
+  margin-bottom: 15px;
+  text-transform: none; // Quitar mayúsculas forzadas
+  font-size: 16px;
+}
+
+.btn-secondary {
+  text-transform: none;
+  font-weight: 600;
+  font-size: 14px;
+}
