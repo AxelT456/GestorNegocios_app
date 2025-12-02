@@ -10,7 +10,7 @@ export class AuthService {
 
   private apiUrl = window.location.hostname.includes('localhost')
     ? 'http://127.0.0.1:8000/api'
-    : 'https://api-cemas-TU-PROYECTO.onrender.com/api';
+    : 'https://gestornegocios-api.onrender.com//api';
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();

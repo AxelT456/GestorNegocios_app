@@ -11,7 +11,7 @@ export class FinanzasService {
   // Asegúrate que esta IP sea la correcta
  private apiUrl = window.location.hostname.includes('localhost')
     ? 'http://127.0.0.1:8000/api'
-    : 'https://api-cemas-TU-PROYECTO.onrender.com/api';
+    : 'https://gestornegocios-api.onrender.com/api';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
