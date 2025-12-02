@@ -9,7 +9,9 @@ import { Observable } from 'rxjs';
 export class FinanzasService {
 
   // Asegúrate que esta IP sea la correcta
-  private apiUrl = 'http://127.0.0.1:8000/api';
+ private apiUrl = window.location.hostname.includes('localhost')
+    ? 'http://127.0.0.1:8000/api'
+    : 'https://api-cemas-TU-PROYECTO.onrender.com/api';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 

@@ -8,7 +8,9 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = window.location.hostname.includes('localhost')
+    ? 'http://127.0.0.1:8000/api'
+    : 'https://api-cemas-TU-PROYECTO.onrender.com/api';
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();
