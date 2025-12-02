@@ -69,7 +69,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# --- Dependencias (NUNCA subir esto) ---
+# --- Dependencias ---
 /node_modules
 
 # --- Compilación y Build ---

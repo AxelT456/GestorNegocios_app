@@ -1,1 +1,30 @@
 
+.custom-tab-bar {
+  --background: #ffffff; // Fondo blanco puro
+  --border: none; // Sin borde feo arriba
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.03); // Sombra suave hacia arriba
+  height: 65px; // Un poco más alta para comodidad
+  padding-bottom: 5px;
+
+  ion-tab-button {
+    --color: #aeb4c0; // Gris para inactivos
+    --color-selected: #3880ff; // Azul para activo
+
+    &[aria-selected="true"] {
+      ion-icon {
+        transform: translateY(-2px); // Pequeña animación al seleccionar
+        font-weight: bold;
+      }
+    }
+
+    ion-icon {
+      font-size: 24px;
+      margin-bottom: 3px;
+    }
+
+    ion-label {
+      font-weight: 600;
+      font-size: 11px;
+    }
+  }
+}

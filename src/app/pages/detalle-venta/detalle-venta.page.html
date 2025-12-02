@@ -1,0 +1,53 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Detalle de Venta</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="bg-light ion-padding">
+
+  <div class="ticket-card">
+
+    <div class="ticket-header">
+      <div class="icon-circle">
+        <ion-icon name="receipt"></ion-icon>
+      </div>
+      <h2>Venta #{{ venta.id }}</h2>
+      <p>{{ venta.fecha | date:'d MMMM y, h:mm a' }}</p>
+      <ion-badge color="success" mode="ios">Pagado</ion-badge>
+    </div>
+
+    <hr class="dashed-line">
+
+    <div class="ticket-body">
+      <p class="section-label">PRODUCTOS</p>
+
+      <div class="item-row" *ngFor="let item of venta.detalles">
+        <div class="item-name">
+          <span class="qty">{{ item.cantidad }}x</span> {{ item.producto_nombre }}
+        </div>
+        <div class="item-price">
+          ${{ item.subtotal | number:'1.2-2' }}
+        </div>
+      </div>
+    </div>
+
+    <hr class="dashed-line">
+
+    <div class="ticket-footer">
+      <div class="row">
+        <span>Método de Pago</span>
+        <strong>{{ venta.metodo_pago }}</strong>
+      </div>
+      <div class="row total-row">
+        <span>TOTAL</span>
+        <span class="total-amount">${{ venta.total | number:'1.2-2' }}</span>
+      </div>
+    </div>
+
+  </div>
+
+</ion-content>

@@ -1,0 +1,56 @@
+.bg-light { --background: #f4f6fa; }
+
+.ticket-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  margin-top: 20px;
+  position: relative;
+}
+
+.ticket-header {
+  text-align: center;
+  margin-bottom: 20px;
+
+  .icon-circle {
+    width: 60px; height: 60px;
+    background: #eef2ff;
+    border-radius: 50%;
+    color: #3880ff;
+    font-size: 30px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 15px;
+  }
+  h2 { margin: 0; font-weight: 800; color: #1c2a4e; }
+  p { color: #8a94a6; font-size: 14px; margin-bottom: 10px; }
+}
+
+.dashed-line {
+  border: 0;
+  border-bottom: 2px dashed #e0e4ee;
+  margin: 20px 0;
+}
+
+.ticket-body {
+  .section-label { font-size: 12px; color: #aeb4c0; font-weight: 700; letter-spacing: 1px; margin-bottom: 15px; }
+
+  .item-row {
+    display: flex; justify-content: space-between; margin-bottom: 12px;
+    .item-name { color: #1c2a4e; font-weight: 500; }
+    .qty { color: #3880ff; font-weight: 700; margin-right: 5px; }
+    .item-price { font-weight: 600; }
+  }
+}
+
+.ticket-footer {
+  .row { display: flex; justify-content: space-between; margin-bottom: 10px; color: #8a94a6; font-size: 14px; }
+  strong { color: #1c2a4e; }
+
+  .total-row {
+    margin-top: 15px;
+    align-items: center;
+    span { font-size: 16px; font-weight: 700; color: #1c2a4e; }
+    .total-amount { font-size: 24px; color: #3880ff; }
+  }
+}

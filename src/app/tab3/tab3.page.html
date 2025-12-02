@@ -1,17 +1,111 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 3
-    </ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar color="light">
+    <ion-title><b>Administración</b></ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar color="light" class="segment-toolbar">
+    <div class="segment-wrapper">
+      <ion-segment [(ngModel)]="seccion" mode="ios" (ionChange)="cambiarSeccion()">
+        <ion-segment-button value="productos">
+          <ion-label>Menú</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="gastos">
+          <ion-label>Gastos</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="bg-light">
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <div *ngIf="seccion === 'productos'" class="content-wrapper">
+
+    <div class="section-header">
+      <p>Desliza a la izquierda para borrar <ion-icon name="arrow-back"></ion-icon></p>
+    </div>
+
+    <ion-list lines="none" class="bg-transparent">
+      <ion-item-sliding *ngFor="let p of productos" class="sliding-item">
+        <ion-item class="custom-item">
+          <div class="icon-square" slot="start">
+            {{ p.nombre.charAt(0) | uppercase }}
+          </div>
+          <ion-label>
+            <h3>{{ p.nombre }}</h3>
+            <p>${{ p.precio_venta | number:'1.2-2' }}</p>
+          </ion-label>
+          <ion-icon name="create-outline" slot="end" color="medium"></ion-icon>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="eliminarProducto(p)">
+            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+
+    <div *ngIf="productos.length === 0" class="empty-state">
+      <ion-icon name="fast-food-outline"></ion-icon>
+      <p>Tu menú está vacío.</p>
+    </div>
+  </div>
+
+
+  <div *ngIf="seccion === 'gastos'" class="content-wrapper">
+
+    <div class="filter-mini">
+      <ion-segment [value]="filtroFecha" (ionChange)="cambiarFiltroFecha($event)" mode="ios">
+        <ion-segment-button value="hoy"><ion-label>Hoy</ion-label></ion-segment-button>
+        <ion-segment-button value="semana"><ion-label>Semana</ion-label></ion-segment-button>
+        <ion-segment-button value="mes"><ion-label>Mes</ion-label></ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <div class="section-header">
+      <p>Historial de salidas</p>
+    </div>
+
+    <ion-list lines="none" class="bg-transparent">
+      <ion-item-sliding *ngFor="let g of gastos" class="sliding-item">
+        <ion-item class="custom-item">
+          <div class="icon-square expense" slot="start">
+            <ion-icon name="wallet-outline"></ion-icon>
+          </div>
+          <ion-label>
+            <h3>{{ g.descripcion }}</h3>
+            <p>{{ g.fecha | date:'d MMM, h:mm a' }}</p>
+          </ion-label>
+          <div slot="end" class="amount-expense">
+            -${{ g.monto | number:'1.2-2' }}
+          </div>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="eliminarGasto(g)">
+            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+
+    <div *ngIf="gastos.length === 0" class="empty-state">
+      <ion-icon name="wallet-outline"></ion-icon>
+      <p>No hay gastos en este periodo.</p>
+    </div>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="seccion === 'productos'">
+    <ion-fab-button (click)="abrirAlertProducto()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="seccion === 'gastos'">
+    <ion-fab-button color="danger" (click)="abrirAlertGasto()">
+      <ion-icon name="remove"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

@@ -1,0 +1,113 @@
+.bg-light { --background: #f4f6fa; }
+.bg-transparent { --background: transparent; }
+
+// HEADER SEGMENT
+.segment-toolbar {
+  padding-bottom: 10px;
+}
+.segment-wrapper {
+  padding: 0 15px;
+  ion-segment {
+    background: #eef1f6;
+    border-radius: 12px;
+    padding: 4px;
+
+    ion-segment-button {
+      --border-radius: 8px;
+      --indicator-color: white;
+      font-weight: 600;
+      color: #8a94a6;
+      &.segment-button-checked { color: #1c2a4e; }
+    }
+  }
+}
+
+.content-wrapper {
+  padding: 10px 15px 80px;
+}
+
+.section-header {
+  text-align: center; margin: 10px 0 20px;
+  p { font-size: 13px; color: #aeb4c0; margin: 0; display: flex; align-items: center; justify-content: center; gap: 5px;}
+}
+
+// ITEMS DESLIZABLES (TARJETAS)
+.sliding-item {
+  background: transparent;
+  margin-bottom: 12px;
+  border-radius: 18px;
+  overflow: hidden; // Para que el borde redondo funcione al deslizar
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.custom-item {
+  --background: white;
+  --padding-start: 15px;
+  --inner-padding-end: 15px;
+
+  .icon-square {
+    width: 45px; height: 45px;
+    background: #eef2ff; // Azul suave
+    color: #3880ff;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 18px;
+    margin-right: 15px;
+
+    &.expense {
+      background: #fff0f3; // Rojo suave
+      color: #eb445a;
+      font-size: 22px;
+    }
+  }
+
+  h3 { font-weight: 700; color: #1c2a4e; font-size: 16px; margin-bottom: 3px; }
+  p { color: #8a94a6; font-size: 13px; }
+
+  .amount-expense {
+    color: #eb445a; font-weight: 700; font-size: 15px;
+  }
+}
+
+.empty-state {
+  text-align: center; margin-top: 60px; color: #aeb4c0;
+  ion-icon { font-size: 50px; margin-bottom: 10px; opacity: 0.5; }
+}
+
+// FAB BUTTONS
+ion-fab-button {
+  --box-shadow: 0 10px 20px rgba(56, 128, 255, 0.3);
+  &[color="danger"] {
+    --box-shadow: 0 10px 20px rgba(235, 68, 90, 0.3);
+  }
+}
+
+
+.filter-mini {
+  margin-bottom: 20px;
+  ion-segment {
+    background: #ffffff;
+    border: 1px solid #e0e4ee;
+    border-radius: 12px;
+    padding: 2px;
+    height: 40px;
+
+    ion-segment-button {
+      --indicator-color: #f4f6fa;
+      min-height: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #8a94a6;
+
+      &.segment-button-checked {
+        color: #1c2a4e;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+// Asegúrate de tener estos estilos para el FAB
+ion-fab {
+  margin-bottom: 10px; // Un poco de aire abajo
+}

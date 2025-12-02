@@ -1,0 +1,42 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" text="Atrás"></ion-back-button>
+    </ion-buttons>
+    <ion-title><b>Historial Completo</b></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="bg-light">
+
+  <div class="filter-wrapper ion-padding">
+    <ion-segment [value]="filtroActual" (ionChange)="cambiarFiltro($event)" mode="ios">
+      <ion-segment-button value="hoy"><ion-label>Hoy</ion-label></ion-segment-button>
+      <ion-segment-button value="semana"><ion-label>Semana</ion-label></ion-segment-button>
+      <ion-segment-button value="mes"><ion-label>Mes</ion-label></ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div class="list-container ion-padding-horizontal">
+
+    <ion-list lines="none" class="bg-transparent">
+      <ion-item *ngFor="let venta of ventas" class="trans-item" button (click)="verDetalle(venta)">
+        <div class="icon-box" slot="start">
+          <ion-icon name="receipt-outline"></ion-icon>
+        </div>
+        <ion-label>
+          <h2>Venta #{{ venta.id }}</h2>
+          <p>{{ venta.fecha | date:'d MMM, h:mm a' }}</p>
+        </ion-label>
+        <div slot="end" class="amount positive">
+          +${{ venta.total }}
+        </div>
+      </ion-item>
+
+      <div *ngIf="ventas.length === 0" class="empty-state">
+        <p>No se encontraron ventas en este periodo.</p>
+      </div>
+    </ion-list>
+
+  </div>
+</ion-content>

@@ -1,17 +1,56 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar color="light">
+    <ion-title><b>Caja</b></ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="limpiarCarrito()" color="medium" *ngIf="carrito.length > 0">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar color="light">
+    <ion-searchbar placeholder="Buscar producto..." mode="ios" (ionInput)="filtrarProductos($event)"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="bg-light">
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+  <div class="pos-grid">
+
+    <div *ngFor="let p of productosFiltrados" class="product-square" (click)="agregarAlCarrito(p)">
+
+      <div class="inner-content">
+        <div class="icon-circle">
+          {{ p.nombre.charAt(0) | uppercase }}
+        </div>
+
+        <h6 class="prod-name">{{ p.nombre }}</h6>
+
+        <p class="prod-price">${{ p.precio_venta | number:'1.0-0' }}</p>
+      </div>
+
+      <div class="qty-badge" *ngIf="getCantidad(p) > 0">
+        {{ getCantidad(p) }}
+      </div>
+
+    </div>
+
+  </div>
+
+  <div *ngIf="productos.length === 0" class="empty-state">
+    <ion-icon name="grid-outline"></ion-icon>
+    <p>No hay productos en tu menú.</p>
+    <ion-button fill="outline" size="small" routerLink="/tabs/tab3">Crear Productos</ion-button>
+  </div>
+
+  <div style="height: 100px;"></div>
+
 </ion-content>
+
+<div class="cart-floater" *ngIf="carrito.length > 0">
+  <div class="cart-btn" (click)="cobrar()">
+    <div class="count-box">{{ totalItems }}</div>
+    <span class="btn-text">Cobrar</span>
+    <span class="total-price">${{ totalVenta | number:'1.2-2' }}</span>
+  </div>
+</div>

@@ -1,17 +1,115 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="bg-light">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline"></ion-refresher-content>
+  </ion-refresher>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <div class="ion-padding top-section">
+    <div class="header-row">
+      <div>
+        <h6 class="text-muted">Bienvenido</h6>
+        <h2>Resumen Financiero</h2>
+      </div>
+      <div class="user-avatar">
+        {{ userInitials }}
+      </div>
+    </div>
+
+    <div class="filter-container">
+      <ion-segment [value]="filtroActual" (ionChange)="cambiarFiltro($event)" mode="ios">
+        <ion-segment-button value="hoy">
+          <ion-label>Hoy</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="semana">
+          <ion-label>Semana</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="mes">
+          <ion-label>Mes</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <div class="balance-card">
+      <p>Ganancia Neta</p>
+      <h1>${{ gananciaTotal | number:'1.2-2' }}</h1>
+
+      <div class="row-stats">
+        <div class="stat-item income">
+          <ion-icon name="arrow-up-circle"></ion-icon>
+          <div>
+            <span>Ventas</span>
+            <h4>${{ totalVentas | number:'1.2-2' }}</h4>
+          </div>
+        </div>
+        <div class="stat-item expense">
+          <ion-icon name="arrow-down-circle"></ion-icon>
+          <div>
+            <span>Gastos</span>
+            <h4>${{ totalGastos | number:'1.2-2' }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <div class="section-title">
+      <h3>Balance General</h3>
+    </div>
+    <div class="chart-container">
+      <canvas id="ventasChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <div class="section-title">
+      <h3>Top Productos</h3>
+      <ion-badge color="primary" mode="ios">Populares</ion-badge>
+    </div>
+    <div class="chart-container" style="height: 180px;">
+      <canvas id="productosChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <div class="section-title">
+      <h3>Ingresos por Canal</h3>
+      <ion-badge color="success" mode="ios">Liquidez</ion-badge>
+    </div>
+    <div class="chart-container" style="height: 180px;">
+      <canvas id="metodosChart"></canvas>
+    </div>
+  </div>
+
+  <div class="transactions-section">
+    <div class="section-header">
+      <h3>Historial Reciente</h3>
+      <ion-button fill="clear" size="small" routerLink="/historial-ventas"> Ver todo </ion-button>
+    </div>
+
+    <ion-list lines="none" class="bg-transparent">
+
+      <ion-item *ngFor="let venta of ultimasVentas | slice:0:5" class="trans-item" button (click)="verDetalle(venta)">
+        <div class="icon-box" slot="start">
+          <ion-icon name="fast-food"></ion-icon>
+        </div>
+        <ion-label>
+          <h2>Venta #{{ venta.id }}</h2>
+          <p>{{ venta.fecha | date:'d MMM, h:mm a' }} • {{ venta.metodo_pago }}</p>
+        </ion-label>
+        <div slot="end" class="amount positive">
+          +${{ venta.total | number:'1.2-2' }}
+        </div>
+      </ion-item>
+
+      <div *ngIf="ultimasVentas.length === 0" class="empty-state-container">
+        <div class="empty-card">
+          <ion-icon name="receipt-outline"></ion-icon>
+          <p>No hay ventas en este periodo.</p>
+        </div>
+      </div>
+
+    </ion-list>
+  </div>
+
 </ion-content>
