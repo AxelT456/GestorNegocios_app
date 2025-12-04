@@ -1,17 +1,18 @@
 <ion-header class="ion-no-border">
   <ion-toolbar color="light">
     <ion-title><b>Administración</b></ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="abrirAlertCategoria()" size="small" color="primary">
+        + Cat
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 
   <ion-toolbar color="light" class="segment-toolbar">
     <div class="segment-wrapper">
       <ion-segment [(ngModel)]="seccion" mode="ios" (ionChange)="cambiarSeccion()">
-        <ion-segment-button value="productos">
-          <ion-label>Menú</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="gastos">
-          <ion-label>Gastos</ion-label>
-        </ion-segment-button>
+        <ion-segment-button value="productos"><ion-label>Menú</ion-label></ion-segment-button>
+        <ion-segment-button value="gastos"><ion-label>Gastos</ion-label></ion-segment-button>
       </ion-segment>
     </div>
   </ion-toolbar>
@@ -20,9 +21,8 @@
 <ion-content [fullscreen]="true" class="bg-light">
 
   <div *ngIf="seccion === 'productos'" class="content-wrapper">
-
     <div class="section-header">
-      <p>Desliza a la izquierda para borrar <ion-icon name="arrow-back"></ion-icon></p>
+      <p>Desliza para borrar <ion-icon name="arrow-back"></ion-icon></p>
     </div>
 
     <ion-list lines="none" class="bg-transparent">
@@ -35,7 +35,7 @@
             <h3>{{ p.nombre }}</h3>
             <p>${{ p.precio_venta | number:'1.2-2' }}</p>
           </ion-label>
-          <ion-icon name="create-outline" slot="end" color="medium"></ion-icon>
+          <ion-icon name="create-outline" slot="end" color="medium" (click)="abrirAlertEditarProducto(p)"></ion-icon>
         </ion-item>
 
         <ion-item-options side="end">
@@ -52,9 +52,7 @@
     </div>
   </div>
 
-
   <div *ngIf="seccion === 'gastos'" class="content-wrapper">
-
     <div class="filter-mini">
       <ion-segment [value]="filtroFecha" (ionChange)="cambiarFiltroFecha($event)" mode="ios">
         <ion-segment-button value="hoy"><ion-label>Hoy</ion-label></ion-segment-button>
@@ -75,7 +73,7 @@
           </div>
           <ion-label>
             <h3>{{ g.descripcion }}</h3>
-            <p>{{ g.fecha | date:'d MMM, h:mm a' }}</p>
+            <p>{{ g.fecha | date:'d MMM' }} • {{ g.categoria_nombre || 'Gasto' }}</p>
           </ion-label>
           <div slot="end" class="amount-expense">
             -${{ g.monto | number:'1.2-2' }}

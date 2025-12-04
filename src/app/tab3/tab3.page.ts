@@ -10,11 +10,14 @@ import { AlertController, ToastController, LoadingController } from '@ionic/angu
 })
 export class Tab3Page {
 
-  seccion = 'productos';
-  filtroFecha = 'hoy'; // Nuevo filtro para gastos
+  seccion = 'productos'; // Controla qué vista vemos
+  filtroFecha = 'hoy';   // Filtro para gastos
 
   productos: any[] = [];
   gastos: any[] = [];
+
+  // Variable vital para evitar el error 400
+  categoriaIdDefault: number | null = null;
 
   constructor(
     private finanzasService: FinanzasService,
@@ -25,14 +28,14 @@ export class Tab3Page {
 
   ionViewWillEnter() {
     this.cargarDatos();
+    this.buscarCategoriaDefault();
   }
 
-  // Se ejecuta al cambiar entre "Menú" y "Gastos"
+  // --- LOGICA DE UI ---
   cambiarSeccion() {
     this.cargarDatos();
   }
 
-  // Se ejecuta al cambiar "Hoy/Semana/Mes"
   cambiarFiltroFecha(event: any) {
     this.filtroFecha = event.detail.value;
     this.cargarDatos();
@@ -40,86 +43,130 @@ export class Tab3Page {
 
   cargarDatos() {
     if (this.seccion === 'productos') {
-      // Los productos no se filtran por fecha, se traen todos
       this.finanzasService.getProductos().subscribe((res: any) => this.productos = res);
     } else {
-      // Los gastos SÍ se filtran
       this.cargarGastosConFiltro();
     }
   }
 
+  // --- 1. GESTIÓN DE CATEGORÍAS (FIX ERROR 400) ---
+
+  buscarCategoriaDefault() {
+    this.finanzasService.getCategorias().subscribe((res: any) => {
+      if (res.length > 0) {
+        this.categoriaIdDefault = res[0].id;
+      } else {
+        // Si no hay, creamos una "General" automáticamente
+        this.finanzasService.crearCategoria('General', 'GASTO').subscribe((cat: any) => {
+          this.categoriaIdDefault = cat.id;
+        });
+      }
+    });
+  }
+
+  async abrirAlertCategoria() {
+    const alert = await this.alertCtrl.create({
+      header: 'Nueva Categoría',
+      inputs: [{ name: 'nombre', type: 'text', placeholder: 'Ej. Insumos, Renta' }],
+      buttons: ['Cancelar', {
+        text: 'Crear',
+        handler: (data) => {
+          if (data.nombre) {
+            this.finanzasService.crearCategoria(data.nombre, 'GASTO').subscribe(() => {
+              this.presentToast('Categoría creada');
+              this.buscarCategoriaDefault();
+            });
+          }
+        }
+      }]
+    });
+    await alert.present();
+  }
+
+  // --- 2. GESTIÓN DE PRODUCTOS ---
+
+  async abrirAlertProducto() {
+    const alert = await this.alertCtrl.create({
+      header: 'Nuevo Platillo',
+      inputs: [
+        { name: 'nombre', type: 'text', placeholder: 'Nombre' },
+        { name: 'precio', type: 'number', placeholder: 'Precio $' }
+      ],
+      buttons: ['Cancelar', {
+        text: 'Guardar',
+        handler: (data) => {
+          if (data.nombre && data.precio) this.crearProducto(data.nombre, data.precio);
+        }
+      }]
+    });
+    await alert.present();
+  }
+
+  async abrirAlertEditarProducto(p: any) {
+    const alert = await this.alertCtrl.create({
+      header: 'Editar Producto',
+      inputs: [
+        { name: 'nombre', type: 'text', value: p.nombre, placeholder: 'Nombre' },
+        { name: 'precio', type: 'number', value: p.precio_venta, placeholder: 'Precio $' }
+      ],
+      buttons: ['Cancelar', {
+        text: 'Actualizar',
+        handler: (data) => {
+          if (data.nombre && data.precio) this.actualizarProducto(p.id, data.nombre, data.precio);
+        }
+      }]
+    });
+    await alert.present();
+  }
+
+  crearProducto(nombre: string, precio: string) {
+    const nuevo = { nombre: nombre, precio_venta: precio, categoria: 1 };
+    this.finanzasService.crearProducto(nuevo).subscribe({
+      next: () => { this.presentToast('Producto creado'); this.cargarDatos(); },
+      error: () => this.presentToast('Error al crear', 'danger')
+    });
+  }
+
+  actualizarProducto(id: number, nombre: string, precio: string) {
+    const prod = { nombre, precio_venta: precio };
+    this.finanzasService.actualizarProducto(id, prod).subscribe({
+      next: () => { this.presentToast('Actualizado'); this.cargarDatos(); },
+      error: () => this.presentToast('Error al actualizar', 'danger')
+    });
+  }
+
+  eliminarProducto(p: any) {
+    this.finanzasService.borrarProducto(p.id).subscribe({
+      next: () => { this.presentToast('Eliminado'); this.cargarDatos(); },
+      error: () => this.presentToast('No se puede borrar (tiene ventas)', 'warning')
+    });
+  }
+
+  // --- 3. GESTIÓN DE GASTOS ---
+
   cargarGastosConFiltro() {
     const hoy = new Date();
-    let fechaInicio = '';
-    let fechaFin = '';
-
-    // Misma lógica de corrección de zona horaria que en Tab 1
     const formatDate = (date: Date) => {
       const offset = date.getTimezoneOffset();
       const dateLocal = new Date(date.getTime() - (offset * 60 * 1000));
       return dateLocal.toISOString().split('T')[0];
     };
 
+    let inicio = '', fin = '';
+
     if (this.filtroFecha === 'hoy') {
-      fechaInicio = formatDate(hoy);
-      fechaFin = formatDate(hoy);
+      inicio = fin = formatDate(hoy);
     } else if (this.filtroFecha === 'semana') {
-      const primerDia = new Date(hoy);
-      primerDia.setDate(hoy.getDate() - hoy.getDay() + 1);
-      const ultimoDia = new Date(hoy);
-      ultimoDia.setDate(hoy.getDate() - hoy.getDay() + 7);
-      fechaInicio = formatDate(primerDia);
-      fechaFin = formatDate(ultimoDia);
+      const primerDia = new Date(hoy); primerDia.setDate(hoy.getDate() - hoy.getDay() + 1);
+      const ultimoDia = new Date(hoy); ultimoDia.setDate(hoy.getDate() - hoy.getDay() + 7);
+      inicio = formatDate(primerDia); fin = formatDate(ultimoDia);
     } else if (this.filtroFecha === 'mes') {
-      const primerDia = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-      const ultimoDia = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
-      fechaInicio = formatDate(primerDia);
-      fechaFin = formatDate(ultimoDia);
+      inicio = formatDate(new Date(hoy.getFullYear(), hoy.getMonth(), 1));
+      fin = formatDate(new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0));
     }
 
-    this.finanzasService.getMovimientos(fechaInicio, fechaFin).subscribe((res: any) => {
-      // Filtramos solo los que son gastos reales
+    this.finanzasService.getMovimientos(inicio, fin).subscribe((res: any) => {
       this.gastos = res.filter((m: any) => m.es_gasto === true || m.es_gasto === 1);
-    });
-  }
-
-  // --- RESTO DE FUNCIONES (CREAR/BORRAR) IGUAL QUE ANTES ---
-
-  async abrirAlertProducto() {
-    const alert = await this.alertCtrl.create({
-      header: 'Nuevo Platillo',
-      inputs: [
-        { name: 'nombre', type: 'text', placeholder: 'Ej. Hamburguesa Doble' },
-        { name: 'precio', type: 'number', placeholder: 'Precio $' }
-      ],
-      buttons: [
-        'Cancelar',
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            if (data.nombre && data.precio) this.crearProducto(data.nombre, data.precio);
-          }
-        }
-      ]
-    });
-    await alert.present();
-  }
-
-  crearProducto(nombre: string, precio: string) {
-    const nuevoProducto = { nombre: nombre, precio_venta: precio, categoria: 1 };
-    this.finanzasService.crearProducto(nuevoProducto).subscribe(() => {
-      this.presentToast('Producto agregado');
-      this.cargarDatos();
-    });
-  }
-
-  eliminarProducto(p: any) {
-    this.finanzasService.borrarProducto(p.id).subscribe({
-        next: () => {
-            this.presentToast('Producto eliminado');
-            this.cargarDatos();
-        },
-        error: () => this.presentToast('No se puede borrar (tiene ventas)', 'warning')
     });
   }
 
@@ -127,27 +174,36 @@ export class Tab3Page {
     const alert = await this.alertCtrl.create({
       header: 'Registrar Gasto',
       inputs: [
-        { name: 'descripcion', type: 'text', placeholder: 'Ej. Gas, Servilletas' },
+        { name: 'descripcion', type: 'text', placeholder: 'Descripción' },
         { name: 'monto', type: 'number', placeholder: 'Monto $' }
       ],
-      buttons: [
-        'Cancelar',
-        {
-          text: 'Registrar',
-          handler: (data) => {
-            if (data.descripcion && data.monto) this.crearGasto(data.descripcion, data.monto);
-          }
+      buttons: ['Cancelar', {
+        text: 'Registrar',
+        handler: (data) => {
+          if (data.descripcion && data.monto) this.crearGasto(data.descripcion, data.monto);
         }
-      ]
+      }]
     });
     await alert.present();
   }
 
   crearGasto(desc: string, monto: string) {
-    const nuevoGasto = { descripcion: desc, monto: parseFloat(monto), es_gasto: true, categoria: 1 };
-    this.finanzasService.crearMovimiento(nuevoGasto).subscribe(() => {
-      this.presentToast('Gasto registrado');
-      this.cargarDatos();
+    if (!this.categoriaIdDefault) {
+      this.presentToast('Cargando categorías... intenta de nuevo', 'warning');
+      this.buscarCategoriaDefault();
+      return;
+    }
+
+    const gasto = {
+      descripcion: desc,
+      monto: parseFloat(monto),
+      es_gasto: true,
+      categoria: this.categoriaIdDefault // Usamos el ID real obtenido de la BD
+    };
+
+    this.finanzasService.crearMovimiento(gasto).subscribe({
+      next: () => { this.presentToast('Gasto registrado'); this.cargarDatos(); },
+      error: (e) => { console.error(e); this.presentToast('Error al registrar', 'danger'); }
     });
   }
 

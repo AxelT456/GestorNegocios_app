@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FinanzasService } from '../services/finanzas';
+import { AuthService } from '../services/auth';
 import Chart from 'chart.js/auto';
 import { forkJoin } from 'rxjs';
+
+import { AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 import { ModalController } from '@ionic/angular';
 import { DetalleVentaPage } from '../pages/detalle-venta/detalle-venta.page';
@@ -31,7 +35,10 @@ export class Tab1Page implements OnInit {
 
   constructor(
     private finanzasService: FinanzasService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private authService: AuthService,
+    private alertCtrl: AlertController, // <--- Inyectar
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -270,4 +277,22 @@ filtrarPorFecha(tipo: string, event: any = null) {
     });
     return await modal.present();
   }
+
+  async cerrarSesion() {
+  const alert = await this.alertCtrl.create({
+    header: 'Cerrar Sesión',
+    message: '¿Estás seguro de que quieres salir?',
+    buttons: [
+      { text: 'Cancelar', role: 'cancel' },
+      {
+        text: 'Salir',
+        handler: () => {
+          this.authService.logout();
+          this.router.navigate(['/login']);
+        }
+      }
+    ]
+  });
+  await alert.present();
+}
 }

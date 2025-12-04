@@ -82,4 +82,25 @@ export class FinanzasService {
   borrarMovimiento(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/movimientos/${id}/`, this.getHeaders());
   }
+
+  actualizarProducto(id: number, producto: any): Observable<any> {
+    const formData = new FormData();
+    formData.append('nombre', producto.nombre);
+    formData.append('precio_venta', producto.precio_venta);
+
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({ 'Authorization': `Token ${token}` });
+
+    return this.http.put(`${this.apiUrl}/productos/${id}/`, formData, { headers });
+  }
+
+  crearCategoria(nombre: string, tipo: string): Observable<any> {
+    // Tipo puede ser 'GASTO' o 'INGRESO'
+    const data = { nombre, tipo };
+    return this.http.post(`${this.apiUrl}/categorias/`, data, this.getHeaders());
+  }
+
+  getCategorias(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/categorias/`, this.getHeaders());
+  }
 }
